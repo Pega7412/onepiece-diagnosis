@@ -20,6 +20,12 @@ start-mobile.bat  # Windowsで携帯確認用サーバーを自動起動
 
 ## 携帯で試す（一番簡単な方法）
 
+### PRをマージした後（推奨）
+
+このリポジトリにはGitHub Pagesへの自動公開設定が含まれています。画面右上の「PRを表示する」からPRを開いてマージすると、GitHubの **Actions → Deploy Pachi Safety Net** に携帯で開ける公開URLが表示されます。初回だけ、リポジトリの **Settings → Pages → Source** を `GitHub Actions` にしてください。以降は変更をマージするたびに同じURLへ自動反映されるため、接続やZIPの再取得は不要です。
+
+### Windows PC経由で確認する
+
 PCと携帯を同じWi-Fiにつないで、次の3ステップだけで確認できます。
 
 1. リポジトリのZIPをWindows PCへダウンロードして展開します。
