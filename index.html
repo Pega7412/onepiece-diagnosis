@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Pachi Safety Net</title>
+  <meta name="description" content="感情打ちを止めるスマホファースト収支管理アプリ" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="phone-shell">
+    <header class="hero">
+      <p class="eyebrow">PACHI SAFETY NET</p>
+      <h1>負けそうな手を<br />打つ前に止める。</h1>
+      <p class="lead">説教ではなく、いま必要なブレーキ。片手で入力して、危険なら画面いっぱいに止めます。</p>
+    </header>
+
+    <section id="stopper" class="screen is-active" aria-labelledby="stopper-title">
+      <h2 id="stopper-title" class="sr-only">メンタル＆軍資金ストッパー</h2>
+      <div class="panel">
+        <label class="field-label">機種</label>
+        <div class="machine-grid" role="group" aria-label="機種選択">
+          <button class="machine-btn is-selected" data-machine="hokuto">北斗 転生2</button>
+          <button class="machine-btn" data-machine="tokyo">東京喰種</button>
+          <button class="machine-btn" data-machine="juggler">ジャグラー</button>
+        </div>
+
+        <label class="number-field">今日の軍資金
+          <span><input id="bankroll" type="number" inputmode="numeric" value="20000" />円</span>
+        </label>
+
+        <label class="field-label mental-label">メンタル状態</label>
+        <div class="mental-grid" role="group" aria-label="メンタル状態">
+          <button class="mental-btn is-selected" data-mental="calm">冷静</button>
+          <button class="mental-btn" data-mental="tilt">取り返したい</button>
+        </div>
+
+        <div id="machine-fields"></div>
+      </div>
+
+      <article id="risk-card" class="risk-card caution" aria-live="polite"></article>
+    </section>
+
+    <section id="dashboard" class="screen" aria-labelledby="dashboard-title">
+      <div class="card">
+        <h2 id="dashboard-title">今週の反省レポート</h2>
+        <p id="net-total" class="net-total">0円</p>
+        <p id="worst-tag" class="muted">最多敗因: まだ記録なし</p>
+      </div>
+
+      <div class="card">
+        <h2>収支を追加</h2>
+        <div class="entry-grid">
+          <label>機種<input id="entry-machine" value="ジャグラー" /></label>
+          <label>敗因タグ<input id="entry-tag" value="オカルト全ツッパ" /></label>
+          <label>投資<input id="entry-invest" type="number" inputmode="numeric" value="12000" /></label>
+          <label>回収<input id="entry-payout" type="number" inputmode="numeric" value="0" /></label>
+        </div>
+        <button id="add-session" class="primary-cta">記録する</button>
+      </div>
+
+      <div id="session-list" class="session-list"></div>
+    </section>
+
+    <section id="borders" class="screen" aria-labelledby="borders-title">
+      <h2 id="borders-title" class="sr-only">機種別ボーダーライン</h2>
+      <div id="border-list" class="border-list"></div>
+    </section>
+  </main>
+
+  <nav class="bottom-tabs" aria-label="画面切り替え">
+    <button class="tab-btn is-selected" data-tab="stopper">ストッパー</button>
+    <button class="tab-btn" data-tab="dashboard">収支</button>
+    <button class="tab-btn" data-tab="borders">ボーダー</button>
+  </nav>
+
+  <script src="./app.js"></script>
+</body>
+</html>
