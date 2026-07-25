@@ -34,8 +34,6 @@ h1 { margin: .5rem 0 0; font-size: 2rem; line-height: 1.12; }
 .machine-grid, .mental-grid, .entry-grid { display: grid; gap: .65rem; }
 .machine-grid { grid-template-columns: repeat(3, 1fr); margin-top: .5rem; }
 .mental-grid { grid-template-columns: repeat(2, 1fr); margin-top: .5rem; }
-.rate-settings { display: grid; grid-template-columns: 1fr 1fr; gap: .65rem; margin-top: 1rem; }
-.rate-settings label { color: var(--muted); font-size: .78rem; font-weight: 800; }
 .machine-btn, .mental-btn, .tab-btn { min-height: 3rem; border-radius: 1rem; background: rgba(255,255,255,.06); font-size: .86rem; font-weight: 900; }
 .machine-btn.is-selected { background: var(--gold); color: #111827; }
 .mental-btn.is-selected[data-mental="calm"], .tab-btn.is-selected { background: var(--blue); color: #07111f; }

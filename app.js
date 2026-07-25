@@ -20,6 +20,8 @@ function renderMachineFields() {
     hokuto: '<label class="number-field">現在のあべし数<span><input id="abesi" type="number" inputmode="numeric" value="450" />あべし</span></label>',
     tokyo: '<label class="number-field">現在のゲーム数 / CZ間<span><input id="cz" type="number" inputmode="numeric" value="220" />G</span></label><label class="number-field">この台への投資済み額<span><input id="currentInvest" type="number" inputmode="numeric" value="10000" />円</span></label>',
     juggler: '<label class="number-field">総ゲーム数<span><input id="totalG" type="number" inputmode="numeric" value="2800" />G</span></label><div class="entry-grid"><label class="number-field">BIG<span><input id="big" type="number" inputmode="numeric" value="8" />回</span></label><label class="number-field">REG<span><input id="reg" type="number" inputmode="numeric" value="5" />回</span></label></div><label class="number-field">現在のハマリ<span><input id="hamari" type="number" inputmode="numeric" value="420" />G</span></label><div class="entry-grid"><label class="number-field">持ちメダル<span><input id="heldCoins" type="number" inputmode="numeric" value="0" />枚</span></label><label class="number-field">追加投資予定<span><input id="plannedCash" type="number" inputmode="numeric" value="10000" />円</span></label></div>',
+    tokyo: '<label class="number-field">現在のゲーム数 / CZ間<span><input id="cz" type="number" inputmode="numeric" value="220" />G</span></label>',
+    juggler: '<label class="number-field">総ゲーム数<span><input id="totalG" type="number" inputmode="numeric" value="2800" />G</span></label><div class="entry-grid"><label class="number-field">BIG<span><input id="big" type="number" inputmode="numeric" value="8" />回</span></label><label class="number-field">REG<span><input id="reg" type="number" inputmode="numeric" value="5" />回</span></label></div><label class="number-field">現在のハマリ<span><input id="hamari" type="number" inputmode="numeric" value="420" />G</span></label>',
   };
   fields.innerHTML = templates[state.machine];
   fields.querySelectorAll('input').forEach((input) => input.addEventListener('input', renderRisk));
@@ -80,20 +82,7 @@ function renderRisk() {
   const copy = riskCopy[result.risk];
   const card = document.getElementById('risk-card');
   card.className = `risk-card ${result.risk}`;
-  const ev = Math.round(result.economics.expectedValue / 100) * 100;
-  const risk = Math.ceil(result.economics.investmentRisk / 100) * 100;
-  const impact = ev < 0 ? `今から打つと平均して${yen(Math.abs(ev))}円の負債が増える試算です` : `簡易試算ではプラス${yen(ev)}円です`;
-  card.innerHTML = `
-    <div class="risk-heading"><span>危険度</span><h2>${copy.label}</h2></div>
-    <div class="money-impact ${ev < 0 ? 'is-negative' : 'is-positive'}">
-      <span>現在の台の期待値</span><strong>${ev >= 0 ? '+' : '−'}${yen(Math.abs(ev))}円</strong>
-      <p>${impact}</p>
-    </div>
-    <div class="risk-cost"><span>予想される追加投資リスク</span><b>最大 ${yen(risk)}円</b></div>
-    ${result.economics.exposure ? `<div class="risk-cost"><span>投資済みを含む資金露出</span><b>${yen(Math.ceil(result.economics.exposure / 100) * 100)}円</b></div>` : ''}
-    <p>${copy.message}</p><ul>${result.reasons.map((reason) => `<li>${reason}</li>`).join('')}</ul>
-    <p class="estimate-note">${result.economics.detail}</p>
-    <p class="estimate-disclaimer">※独自の簡易モデルによる参考値です。設定・モード・当日の挙動を保証するものではなく、実戦上の正確な期待値ではありません。</p>`;
+  card.innerHTML = `<span>危険度</span><h2>${copy.label}</h2><p>${copy.message}</p><ul>${result.reasons.map((reason) => `<li>${reason}</li>`).join('')}</ul>`;
 }
 
 function loadSessions() {
@@ -181,7 +170,6 @@ function bindEvents() {
 }
 
 loadSessions();
-loadRateSettings();
 renderMachineFields();
 renderBorders();
 renderReport();
