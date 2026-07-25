@@ -17,12 +17,14 @@ body {
   color: var(--text);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
-button, input { font: inherit; }
+button, input, select { font: inherit; }
 button { border: 0; color: inherit; cursor: pointer; }
 input { width: 100%; border: 0; background: transparent; color: var(--text); outline: none; }
+select { width: 100%; margin-top: .45rem; border: 1px solid rgba(255,255,255,.1); border-radius: .9rem; background: #090f1b; color: var(--text); padding: .75rem; }
 .phone-shell { max-width: 28rem; min-height: 100svh; margin: 0 auto; padding: 1.5rem 1rem 6rem; }
 .hero { padding: .25rem .25rem 1rem; }
 .eyebrow { color: var(--blue); font-size: .75rem; font-weight: 800; letter-spacing: .25em; }
+.version-badge { display: inline-block; border: 1px solid rgba(59,167,255,.5); border-radius: 999px; padding: .2rem .45rem; letter-spacing: .05em; }
 h1 { margin: .5rem 0 0; font-size: 2rem; line-height: 1.12; }
 .lead, .muted { color: var(--muted); font-size: .92rem; line-height: 1.65; }
 .screen { display: none; }
@@ -46,6 +48,16 @@ h1 { margin: .5rem 0 0; font-size: 2rem; line-height: 1.12; }
 .risk-card.safe { border-color: rgba(59,167,255,.75); background: rgba(59,167,255,.15); color: #d9efff; }
 .risk-card.caution { border-color: rgba(246,183,60,.8); background: rgba(246,183,60,.15); color: #fff2c8; }
 .risk-card.danger { border-color: var(--orange); background: rgba(255,122,26,.2); box-shadow: 0 0 34px rgba(255,122,26,.25); color: #fff7ed; }
+.risk-heading { display: flex; align-items: end; justify-content: space-between; }
+.money-impact { margin-top: 1rem; border-radius: 1.25rem; padding: 1rem; background: rgba(0,0,0,.3); }
+.money-impact span, .risk-cost span { display: block; color: var(--muted); font-size: .76rem; font-weight: 800; }
+.money-impact strong { display: block; margin-top: .15rem; font-size: clamp(2.4rem, 13vw, 3.8rem); line-height: 1; letter-spacing: -.04em; }
+.money-impact.is-negative strong, .money-impact.is-negative p { color: #ff9b7b; }
+.money-impact.is-positive strong { color: #78c8ff; }
+.risk-cost { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: .7rem; border-bottom: 1px solid rgba(255,255,255,.12); padding: .7rem .2rem; }
+.risk-cost b { color: var(--gold); font-size: 1.15rem; white-space: nowrap; }
+.estimate-note { color: var(--muted); font-size: .78rem; }
+.estimate-disclaimer { border-top: 1px solid rgba(255,255,255,.1); padding-top: .75rem; color: var(--muted); font-size: .68rem; font-weight: 500 !important; line-height: 1.55; }
 .card, .border-card, .session-item { margin-bottom: .9rem; }
 .card h2, .border-card h2 { margin: 0 0 .8rem; color: var(--blue); font-size: .9rem; }
 .net-total { margin: 0; font-size: 2rem; font-weight: 950; }

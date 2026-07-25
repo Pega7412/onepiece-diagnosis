@@ -3,9 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <title>Pachi Safety Net</title>
   <meta name="description" content="感情打ちを止めるスマホファースト収支管理アプリ" />
-  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./styles.css?v=0.2.0" />
 </head>
 <body>
   <main class="phone-shell">
@@ -28,6 +29,23 @@
         <label class="number-field">今日の軍資金
           <span><input id="bankroll" type="number" inputmode="numeric" value="20000" />円</span>
         </label>
+
+        <div class="rate-settings">
+          <label>貸出
+            <select id="lend-coins">
+              <option value="46">1,000円 / 46枚</option>
+              <option value="47">1,000円 / 47枚</option>
+              <option value="50">1,000円 / 50枚</option>
+            </select>
+          </label>
+          <label>交換率
+            <select id="exchange-rate">
+              <option value="5">等価（5.0枚）</option>
+              <option value="5.2">5.2枚交換</option>
+              <option value="5.6" selected>5.6枚交換</option>
+            </select>
+          </label>
+        </div>
 
         <label class="field-label mental-label">メンタル状態</label>
         <div class="mental-grid" role="group" aria-label="メンタル状態">
@@ -74,6 +92,7 @@
     <button class="tab-btn" data-tab="borders">ボーダー</button>
   </nav>
 
-  <script src="./app.js"></script>
+  <script src="./calculator.js?v=0.2.0"></script>
+  <script src="./app.js?v=0.2.0"></script>
 </body>
 </html>

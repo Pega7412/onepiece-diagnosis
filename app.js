@@ -18,6 +18,8 @@ function renderMachineFields() {
   const fields = document.getElementById('machine-fields');
   const templates = {
     hokuto: '<label class="number-field">現在のあべし数<span><input id="abesi" type="number" inputmode="numeric" value="450" />あべし</span></label>',
+    tokyo: '<label class="number-field">現在のゲーム数 / CZ間<span><input id="cz" type="number" inputmode="numeric" value="220" />G</span></label><label class="number-field">この台への投資済み額<span><input id="currentInvest" type="number" inputmode="numeric" value="10000" />円</span></label>',
+    juggler: '<label class="number-field">総ゲーム数<span><input id="totalG" type="number" inputmode="numeric" value="2800" />G</span></label><div class="entry-grid"><label class="number-field">BIG<span><input id="big" type="number" inputmode="numeric" value="8" />回</span></label><label class="number-field">REG<span><input id="reg" type="number" inputmode="numeric" value="5" />回</span></label></div><label class="number-field">現在のハマリ<span><input id="hamari" type="number" inputmode="numeric" value="420" />G</span></label><div class="entry-grid"><label class="number-field">持ちメダル<span><input id="heldCoins" type="number" inputmode="numeric" value="0" />枚</span></label><label class="number-field">追加投資予定<span><input id="plannedCash" type="number" inputmode="numeric" value="10000" />円</span></label></div>',
     tokyo: '<label class="number-field">現在のゲーム数 / CZ間<span><input id="cz" type="number" inputmode="numeric" value="220" />G</span></label>',
     juggler: '<label class="number-field">総ゲーム数<span><input id="totalG" type="number" inputmode="numeric" value="2800" />G</span></label><div class="entry-grid"><label class="number-field">BIG<span><input id="big" type="number" inputmode="numeric" value="8" />回</span></label><label class="number-field">REG<span><input id="reg" type="number" inputmode="numeric" value="5" />回</span></label></div><label class="number-field">現在のハマリ<span><input id="hamari" type="number" inputmode="numeric" value="420" />G</span></label>',
   };
@@ -54,7 +56,25 @@ function judge() {
     if (combined > 160 || hamari > 350 || reg < big * 0.55) score += 2;
     reasons.push(`合算1/${combined}、現在${hamari}Gハマリ。「そろそろ」は根拠ではない。`);
   }
-  return { risk: score >= 4 ? 'danger' : score >= 2 ? 'caution' : 'safe', reasons };
+  const economics = calculateEconomics();
+  if (economics.expectedValue <= -3000) score += 2;
+  else if (economics.expectedValue < 0) score += 1;
+  return { risk: score >= 4 ? 'danger' : score >= 2 ? 'caution' : 'safe', reasons, economics };
+}
+
+function calculateEconomics() {
+  const common = {
+    bankroll: numberValue('bankroll'),
+    lendCoins: numberValue('lend-coins'),
+    exchangeRate: numberValue('exchange-rate'),
+  };
+  if (state.machine === 'hokuto') return PachiCalculator.calculateHokuto({ ...common, abesi: numberValue('abesi') });
+  if (state.machine === 'tokyo') return PachiCalculator.calculateTokyo({ ...common, cz: numberValue('cz'), currentInvest: numberValue('currentInvest') });
+  return PachiCalculator.calculateJuggler({
+    ...common,
+    totalG: numberValue('totalG'), big: numberValue('big'), reg: numberValue('reg'), hamari: numberValue('hamari'),
+    heldCoins: numberValue('heldCoins'), plannedCash: numberValue('plannedCash'),
+  });
 }
 
 function renderRisk() {
@@ -71,6 +91,20 @@ function loadSessions() {
 
 function saveSessions() {
   localStorage.setItem('pachiSessions', JSON.stringify(state.sessions));
+}
+
+function loadRateSettings() {
+  const saved = JSON.parse(localStorage.getItem('pachiRateSettings') || '{}');
+  if (saved.lendCoins) document.getElementById('lend-coins').value = saved.lendCoins;
+  if (saved.exchangeRate) document.getElementById('exchange-rate').value = saved.exchangeRate;
+}
+
+function saveRateSettings() {
+  localStorage.setItem('pachiRateSettings', JSON.stringify({
+    lendCoins: document.getElementById('lend-coins').value,
+    exchangeRate: document.getElementById('exchange-rate').value,
+  }));
+  renderRisk();
 }
 
 function renderReport() {
@@ -114,6 +148,8 @@ function bindEvents() {
   }));
 
   document.getElementById('bankroll').addEventListener('input', renderRisk);
+  document.getElementById('lend-coins').addEventListener('change', saveRateSettings);
+  document.getElementById('exchange-rate').addEventListener('change', saveRateSettings);
   document.getElementById('add-session').addEventListener('click', () => {
     state.sessions.unshift({
       id: `${Date.now()}-${Math.random()}`,

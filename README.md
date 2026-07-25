@@ -8,6 +8,7 @@
 index.html        # スマホUIのHTML構造、下部タブ、入力フォーム
 styles.css        # ダークテーマ、スマホ幅、片手操作向けCTAのスタイル
 app.js            # 危険度判定、LocalStorage収支管理、敗因レポート、画面切り替え
+calculator.js     # 交換ギャップ、機種別期待値、追加投資リスクの簡易計算
 start-mobile.bat  # Windowsで携帯確認用サーバーを自動起動
 ```
 
@@ -23,6 +24,8 @@ start-mobile.bat  # Windowsで携帯確認用サーバーを自動起動
 ### PRをマージした後（推奨）
 
 このリポジトリにはGitHub Pagesへの自動公開設定が含まれています。画面右上の「PRを表示する」からPRを開いてマージすると、GitHubの **Actions → Deploy Pachi Safety Net** に携帯で開ける公開URLが表示されます。初回だけ、リポジトリの **Settings → Pages → Source** を `GitHub Actions` にしてください。以降は変更をマージするたびに同じURLへ自動反映されるため、接続やZIPの再取得は不要です。
+
+期待値機能が反映された最新版では、画面上部に `v0.2` と表示されます。古い画面のままの場合は、最新PRがマージされ、Actionsの公開処理が緑色になったことを確認してから、URL末尾に `?v=2` を付けて開いてください。CSSとJavaScriptにもバージョン付きURLを使用しているため、更新後の古いキャッシュを回避できます。
 
 ### Windows PC経由で確認する
 
