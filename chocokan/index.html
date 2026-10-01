@@ -313,7 +313,8 @@
 </div>
 
 <div id="controls">
-  <button id="replay" type="button">▶ もう一度</button>
+  <button id="replay" type="button">🔊 音ありで再生</button>
+  <audio id="sound" src="chocokan_sound.mp3" preload="auto"></audio>
   <div id="bar"><i></i></div>
 </div>
 
@@ -383,7 +384,16 @@
     bar.style.width = (t / DURATION * 100) + '%';
     requestAnimationFrame(tick);
   }
-  document.getElementById('replay').addEventListener('click', play);
+  // Browsers block autoplay with sound, so the first run is silent and the
+  // button restarts the film together with the soundtrack.
+  const sound = document.getElementById('sound');
+  const replay = document.getElementById('replay');
+  replay.addEventListener('click', () => {
+    sound.pause();
+    sound.currentTime = 0;
+    sound.play().then(play, play);
+    replay.textContent = '▶ もう一度';
+  });
 
   if (render) {
     anims().forEach(a => a.pause());
