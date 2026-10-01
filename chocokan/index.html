@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>チョコ鑑 15秒</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fff7ee;
+    --cream-2: #fbe9d7;
+    --choco: #5a3522;
+    --choco-2: #7a4a2f;
+    --choco-3: #9c6643;
+    --milk: #c99472;
+    --pink: #f6b3b0;
+    --mist: #e9e3f3;
+    --ink: #4a2c1c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #2b1a11;
+    font-family: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", "IPAGothic", sans-serif;
+    color: var(--ink);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+
+  /* ---------- 1080x1920 stage, scaled to fit ---------- */
+  #viewport { position: relative; }
+  #stage {
+    position: absolute; left: 0; top: 0;
+    width: 1080px; height: 1920px;
+    transform-origin: 0 0;
+    overflow: hidden;
+    background: var(--cream);
+  }
+  .abs { position: absolute; }
+  .center-x { left: 0; right: 0; text-align: center; }
+
+  /* soft background dots */
+  .dots {
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(201,148,114,.16) 6px, transparent 7px);
+    background-size: 120px 120px;
+    animation: drift 15s linear both;
+  }
+  @keyframes drift { from { background-position: 0 0; } to { background-position: 120px -240px; } }
+  .glow {
+    width: 1300px; height: 1300px; left: -110px; top: 300px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(246,179,176,.35), transparent 65%);
+    animation: glowshift 15s ease-in-out both;
+  }
+  @keyframes glowshift {
+    0% { transform: translate(-120px, -200px); }
+    50% { transform: translate(120px, 100px); }
+    100% { transform: translate(0, 0); }
+  }
+
+  /* ---------- generic motions ---------- */
+  @keyframes popIn {
+    0% { opacity: 0; transform: translateY(30px) scale(.6); }
+    60% { opacity: 1; transform: translateY(-6px) scale(1.06); }
+    100% { opacity: 1; transform: none; }
+  }
+  @keyframes fadeUp {
+    0% { opacity: 0; transform: translateY(40px); }
+    100% { opacity: 1; transform: none; }
+  }
+  @keyframes fadeOut { to { opacity: 0; transform: translateY(-40px) scale(.96); } }
+  @keyframes floatAway { to { opacity: 0; transform: translateY(-160px) scale(.8); } }
+  @keyframes bob {
+    0%, 100% { translate: 0 0; }
+    50% { translate: 0 -12px; }
+  }
+
+  /* ---------- Scene 1 : everyday small moyamoya ---------- */
+  .phone {
+    left: 300px; top: 900px; width: 480px; height: 860px;
+    border-radius: 72px; background: var(--choco);
+    padding: 22px;
+    box-shadow: 0 40px 80px rgba(90,53,34,.25);
+    animation: phoneIn .8s cubic-bezier(.2,.9,.3,1.2) 0s both, phoneOut .6s ease-in 4.3s forwards;
+  }
+  @keyframes phoneIn { from { opacity: 0; transform: translateY(260px) rotate(-4deg); } to { opacity: 1; transform: rotate(-3deg); } }
+  @keyframes phoneOut { from { opacity: 1; transform: rotate(-3deg); } to { opacity: 0; transform: translateY(300px) rotate(-6deg); } }
+  .screen {
+    width: 100%; height: 100%; border-radius: 52px; background: #fffaf4;
+    position: relative; overflow: hidden;
+  }
+  .screen .time { position: absolute; top: 34px; left: 0; right: 0; text-align: center; font-weight: 700; font-size: 30px; color: var(--choco-3); }
+  .screen .name { position: absolute; top: 96px; left: 0; right: 0; text-align: center; font-size: 30px; font-weight: 700; color: var(--choco-2); }
+  .screen .line { position: absolute; top: 150px; left: 30px; right: 30px; height: 2px; background: var(--cream-2); }
+  .msg {
+    position: absolute; left: 34px; top: 200px; max-width: 330px;
+    background: var(--cream-2); border-radius: 30px 30px 30px 8px;
+    padding: 22px 28px; font-size: 32px; font-weight: 700; line-height: 1.4; color: var(--ink);
+    animation: popIn .5s ease-out .5s both;
+  }
+  .draft {
+    position: absolute; left: 30px; right: 30px; bottom: 40px; height: 84px;
+    border-radius: 42px; border: 3px solid var(--cream-2);
+    padding: 0 30px; display: flex; align-items: center; font-size: 30px; color: var(--milk);
+  }
+  .caret { width: 3px; height: 38px; background: var(--choco-3); margin-left: 4px; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .thought {
+    background: #fff; border-radius: 60px;
+    padding: 30px 48px; font-size: 58px; font-weight: 900; color: var(--ink);
+    white-space: nowrap;
+    box-shadow: 0 16px 0 var(--cream-2), 0 24px 40px rgba(90,53,34,.12);
+  }
+  .thought .moya { display: inline-block; margin-right: 18px; color: #a99bc4; font-size: 46px; font-weight: 700; vertical-align: 6px; }
+  .t1 { left: 70px; top: 230px; animation: popIn .55s ease-out .7s both, bob 2.4s ease-in-out 1.3s infinite, floatAway .6s ease-in 4.15s forwards; }
+  .t2 { right: 60px; top: 460px; animation: popIn .55s ease-out 1.75s both, bob 2.6s ease-in-out 2.3s infinite, floatAway .6s ease-in 4.25s forwards; }
+  .t3 { left: 50px; top: 690px; animation: popIn .55s ease-out 2.8s both, bob 2.2s ease-in-out 3.4s infinite, floatAway .6s ease-in 4.35s forwards; }
+
+  /* ---------- Scene 2 : “もっと気軽でいい” + one chocolate ---------- */
+  .s2a { top: 470px; font-size: 64px; font-weight: 700; color: var(--choco-3);
+    animation: fadeUp .6s ease-out 4.85s both, fadeOut .5s ease-in 7.3s forwards; }
+  .s2b { top: 580px; font-size: 84px; font-weight: 900; line-height: 1.35; color: var(--ink);
+    animation: fadeUp .7s ease-out 5.3s both, fadeOut .5s ease-in 7.35s forwards; }
+  .s2b em { font-style: normal; background: linear-gradient(transparent 62%, var(--pink) 62%); padding: 0 6px; }
+
+  .choco-drop {
+    left: 400px; top: 1020px; width: 280px; height: 280px;
+    animation: chocoFall .9s cubic-bezier(.3,0,.4,1) 5.75s both, chocoPick .7s ease-in-out 6.75s forwards, chocoGo .5s ease-in 7.35s forwards;
+  }
+  @keyframes chocoFall {
+    0% { opacity: 0; transform: translateY(-900px) rotate(-30deg); }
+    55% { opacity: 1; transform: translateY(0) rotate(4deg) scale(1.08, .9); }
+    75% { transform: translateY(-60px) rotate(-2deg); }
+    100% { opacity: 1; transform: none; }
+  }
+  @keyframes chocoPick {
+    0% { transform: none; }
+    40% { transform: translateY(-90px) rotate(-8deg) scale(1.05); }
+    100% { transform: translateY(-50px) rotate(-5deg); }
+  }
+  @keyframes chocoGo { from { opacity: 1; transform: translateY(-50px) rotate(-5deg); } to { opacity: 0; transform: translateY(-50px) rotate(-5deg) scale(.3); } }
+  .shadow {
+    left: 410px; top: 1320px; width: 260px; height: 40px; border-radius: 50%;
+    background: rgba(90,53,34,.15);
+    animation: fadeUp .4s ease-out 6.25s both, fadeOut .4s ease-in 7.35s forwards;
+  }
+  .choco-pop {
+    left: 700px; top: 990px; font-size: 64px; font-weight: 900; color: var(--choco-3);
+    animation: popIn .45s ease-out 6.8s both, fadeOut .4s ease-in 7.35s forwards;
+  }
+  .sparkle { width: 40px; height: 40px; }
+  .sp1 { left: 350px; top: 990px; animation: twinkle .9s ease-out 6.35s both; }
+  .sp2 { left: 690px; top: 1130px; animation: twinkle .9s ease-out 6.5s both; }
+  .sp3 { left: 380px; top: 1250px; animation: twinkle .9s ease-out 6.9s both; }
+  @keyframes twinkle {
+    0% { opacity: 0; transform: scale(0) rotate(0); }
+    40% { opacity: 1; transform: scale(1.2) rotate(45deg); }
+    100% { opacity: 0; transform: scale(.4) rotate(90deg); }
+  }
+
+  /* ---------- Scene 3 : 人に聞く / AIに聞く ---------- */
+  .s3a { top: 360px; font-size: 82px; font-weight: 900; color: var(--ink);
+    animation: fadeUp .6s ease-out 7.65s both, fadeOut .5s ease-in 10.75s forwards; }
+  .card {
+    top: 600px; width: 440px; height: 600px; border-radius: 56px;
+    background: #fff; padding: 56px 30px 0; text-align: center;
+    box-shadow: 0 20px 0 var(--cream-2), 0 30px 50px rgba(90,53,34,.12);
+  }
+  .card .icon { width: 220px; height: 220px; margin: 0 auto 30px; }
+  .card h3 { font-size: 64px; font-weight: 900; color: var(--ink); }
+  .card p { margin-top: 18px; font-size: 36px; font-weight: 700; color: var(--choco-3); line-height: 1.45; }
+  .card-l { left: 80px; animation: cardL .7s cubic-bezier(.2,.9,.3,1.15) 8.0s both, tapL 3s ease-in-out 8.9s both, fadeOut .5s ease-in 10.8s forwards; }
+  .card-r { right: 80px; animation: cardR .7s cubic-bezier(.2,.9,.3,1.15) 8.15s both, tapR 3s ease-in-out 8.9s both, fadeOut .5s ease-in 10.85s forwards; }
+  @keyframes cardL { from { opacity: 0; transform: translateX(-500px) rotate(-10deg); } to { opacity: 1; transform: none; } }
+  @keyframes cardR { from { opacity: 0; transform: translateX(500px) rotate(10deg); } to { opacity: 1; transform: none; } }
+  /* gentle alternating “choose” highlight: left, then right — neither is the hero */
+  @keyframes tapL {
+    0%, 100% { scale: 1; }
+    10% { scale: .95; }
+    20%, 35% { scale: 1.04; }
+    45% { scale: 1; }
+  }
+  @keyframes tapR {
+    0%, 35% { scale: 1; }
+    45% { scale: .95; }
+    55%, 70% { scale: 1.04; }
+    80%, 100% { scale: 1; }
+  }
+  .ring {
+    width: 170px; height: 170px; border-radius: 50%; border: 10px solid var(--pink);
+    opacity: 0;
+  }
+  .ring-l { left: 215px; top: 680px; animation: ring .8s ease-out 9.1s both; }
+  .ring-r { left: 695px; top: 680px; animation: ring .8s ease-out 10.15s both; }
+  @keyframes ring {
+    0% { opacity: 0; transform: scale(.3); }
+    30% { opacity: 1; }
+    100% { opacity: 0; transform: scale(1.4); }
+  }
+  .s3b { top: 1340px; font-size: 76px; font-weight: 900; color: var(--choco-2);
+    animation: fadeUp .6s ease-out 9.3s both, fadeOut .5s ease-in 10.9s forwards; }
+  .s3c { top: 1470px; font-size: 40px; font-weight: 700; color: var(--choco-3);
+    animation: fadeUp .6s ease-out 9.6s both, fadeOut .5s ease-in 10.9s forwards; }
+
+  /* ---------- Scene 4 : copy + logo ---------- */
+  .s4a, .s4b { font-size: 86px; font-weight: 900; color: var(--ink); }
+  .s4a { top: 560px; animation: fadeUp .6s ease-out 11.4s both; }
+  .s4b { top: 690px; animation: fadeUp .6s ease-out 12.0s both; }
+  .s4a b, .s4b b { color: var(--choco-3); }
+  .logo-choco { left: 420px; top: 960px; width: 240px; height: 240px;
+    animation: logoDrop .8s cubic-bezier(.3,0,.4,1) 12.7s both; }
+  @keyframes logoDrop {
+    0% { opacity: 0; transform: translateY(-300px) rotate(-20deg); }
+    60% { opacity: 1; transform: translateY(0) scale(1.08, .92) rotate(3deg); }
+    80% { transform: translateY(-24px); }
+    100% { opacity: 1; transform: none; }
+  }
+  .s4c { top: 1270px; font-size: 56px; font-weight: 700; color: var(--choco-3);
+    animation: fadeUp .5s ease-out 13.15s both; }
+  .s4d { top: 1350px; font-size: 168px; font-weight: 900; color: var(--choco); letter-spacing: .04em;
+    animation: logoPop .7s cubic-bezier(.2,.9,.3,1.3) 13.45s both; }
+  @keyframes logoPop { 0% { opacity: 0; transform: scale(.5); } 100% { opacity: 1; transform: none; } }
+  .s4e { top: 1590px; font-size: 38px; font-weight: 700; color: var(--milk); letter-spacing: .2em;
+    animation: fadeUp .6s ease-out 14.0s both; }
+
+  /* ---------- controls (not part of the film) ---------- */
+  #controls {
+    margin-top: 14px; display: flex; gap: 12px; align-items: center;
+    font-family: inherit;
+  }
+  #controls button {
+    font: inherit; font-weight: 700; font-size: 15px;
+    padding: 8px 18px; border-radius: 999px; border: 0;
+    background: #fbe9d7; color: #5a3522; cursor: pointer;
+  }
+  #bar { width: 200px; height: 6px; border-radius: 3px; background: rgba(251,233,215,.25); overflow: hidden; }
+  #bar i { display: block; height: 100%; width: 0; background: #f6b3b0; }
+  body.render #controls { display: none; }
+  body.render { background: var(--cream); }
+</style>
+</head>
+<body>
+<div id="viewport">
+<div id="stage">
+  <div class="abs dots"></div>
+  <div class="abs glow"></div>
+
+  <!-- Scene 1 -->
+  <div class="abs phone">
+    <div class="screen">
+      <div class="time">21:47</div>
+      <div class="name">ゆうと</div>
+      <div class="line"></div>
+      <div class="msg">おつかれ〜！<br>また今度ね☺</div>
+      <div class="draft">今日、LINEしても<span class="caret"></span></div>
+    </div>
+  </div>
+  <div class="abs thought t1"><span class="moya">もや</span>これって脈あり？</div>
+  <div class="abs thought t2"><span class="moya">もや</span>今日LINEしていい？</div>
+  <div class="abs thought t3"><span class="moya">もや</span>仕事、このままでいいのかな？</div>
+
+  <!-- Scene 2 -->
+  <div class="abs center-x s2a">そんなとき、</div>
+  <div class="abs center-x s2b">占いは、<br><em>もっと気軽でいい。</em></div>
+  <div class="abs shadow"></div>
+  <svg class="abs choco-drop" viewBox="0 0 200 200" aria-hidden="true"><use href="#choco"/></svg>
+  <div class="abs choco-pop">ちょこっ</div>
+  <svg class="abs sparkle sp1" viewBox="0 0 40 40"><use href="#spark"/></svg>
+  <svg class="abs sparkle sp2" viewBox="0 0 40 40"><use href="#spark"/></svg>
+  <svg class="abs sparkle sp3" viewBox="0 0 40 40"><use href="#spark"/></svg>
+
+  <!-- Scene 3 -->
+  <div class="abs center-x s3a">人に聞く。AIに聞く。</div>
+  <div class="abs card card-l">
+    <svg class="icon" viewBox="0 0 220 220" aria-hidden="true">
+      <circle cx="110" cy="110" r="104" fill="#fbe9d7"/>
+      <circle cx="92" cy="92" r="34" fill="#7a4a2f"/>
+      <path d="M38 178c6-38 30-56 54-56s48 18 54 56z" fill="#7a4a2f"/>
+      <rect x="128" y="38" width="66" height="46" rx="20" fill="#f6b3b0"/>
+      <path d="M140 80l-6 18 20-14z" fill="#f6b3b0"/>
+      <circle cx="146" cy="61" r="5" fill="#fff"/><circle cx="161" cy="61" r="5" fill="#fff"/><circle cx="176" cy="61" r="5" fill="#fff"/>
+    </svg>
+    <h3>人に聞く</h3>
+    <p>話しながら<br>考えたいときに</p>
+  </div>
+  <div class="abs card card-r">
+    <svg class="icon" viewBox="0 0 220 220" aria-hidden="true">
+      <circle cx="110" cy="110" r="104" fill="#fbe9d7"/>
+      <rect x="44" y="58" width="132" height="92" rx="34" fill="#7a4a2f"/>
+      <path d="M72 146l-8 30 34-26z" fill="#7a4a2f"/>
+      <circle cx="84" cy="104" r="9" fill="#fff"/><circle cx="110" cy="104" r="9" fill="#fff"/><circle cx="136" cy="104" r="9" fill="#fff"/>
+      <path d="M172 30l6 14 14 6-14 6-6 14-6-14-14-6 14-6z" fill="#f6b3b0"/>
+    </svg>
+    <h3>AIに聞く</h3>
+    <p>今すぐ少し<br>聞きたいときに</p>
+  </div>
+  <div class="abs ring ring-l"></div>
+  <div class="abs ring ring-r"></div>
+  <div class="abs center-x s3b">今の気分で、選べる。</div>
+  <div class="abs center-x s3c">そのときの悩みと時間に合わせて</div>
+
+  <!-- Scene 4 -->
+  <div class="abs center-x s4a"><b>ちょこっと</b>聞きたい。</div>
+  <div class="abs center-x s4b"><b>ちょこっと</b>占いたい。</div>
+  <svg class="abs logo-choco" viewBox="0 0 200 200" aria-hidden="true"><use href="#choco-bite"/></svg>
+  <div class="abs center-x s4c">だから、</div>
+  <div class="abs center-x s4d">チョコ鑑。</div>
+  <div class="abs center-x s4e">ちょこっと鑑定</div>
+</div>
+</div>
+
+<div id="controls">
+  <button id="replay" type="button">▶ もう一度</button>
+  <div id="bar"><i></i></div>
+</div>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="cg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8a5534"/><stop offset="1" stop-color="#5a3522"/>
+    </linearGradient>
+    <symbol id="choco" viewBox="0 0 200 200">
+      <rect x="10" y="14" width="180" height="180" rx="34" fill="#3f2416"/>
+      <rect x="10" y="6" width="180" height="180" rx="34" fill="url(#cg)"/>
+      <rect x="36" y="32" width="128" height="128" rx="22" fill="#6b3f26"/>
+      <rect x="44" y="40" width="112" height="112" rx="18" fill="#7d4a2d"/>
+      <path d="M100 82c-10-16-36-10-34 10 2 18 34 34 34 34s32-16 34-34c2-20-24-26-34-10z" fill="#6b3f26"/>
+      <path d="M30 34q18-14 50-14" stroke="#c99472" stroke-width="8" stroke-linecap="round" fill="none" opacity=".6"/>
+    </symbol>
+    <mask id="bite">
+      <rect width="200" height="200" fill="#fff"/>
+      <circle cx="186" cy="18" r="30" fill="#000"/>
+      <circle cx="156" cy="2" r="22" fill="#000"/>
+      <circle cx="200" cy="50" r="22" fill="#000"/>
+    </mask>
+    <symbol id="choco-bite" viewBox="0 0 200 200">
+      <g mask="url(#bite)"><use href="#choco"/></g>
+    </symbol>
+    <symbol id="spark" viewBox="0 0 40 40">
+      <path d="M20 0l5 15 15 5-15 5-5 15-5-15-15-5 15-5z" fill="#f6b3b0"/>
+    </symbol>
+  </defs>
+</svg>
+
+<script>
+(() => {
+  const DURATION = 15000;
+  const params = new URLSearchParams(location.search);
+  const render = params.has('render');
+  const stage = document.getElementById('stage');
+  const viewport = document.getElementById('viewport');
+  const bar = document.querySelector('#bar i');
+  if (render) document.body.classList.add('render');
+
+  function fit() {
+    const reserve = render ? 0 : 60;
+    const s = Math.min(innerWidth / 1080, (innerHeight - reserve) / 1920);
+    stage.style.transform = `scale(${s})`;
+    viewport.style.width = 1080 * s + 'px';
+    viewport.style.height = 1920 * s + 'px';
+  }
+  addEventListener('resize', fit);
+  fit();
+
+  const anims = () => stage.getAnimations({ subtree: true });
+
+  // Deterministic seek, used for frame-by-frame video export.
+  window.seek = (ms) => {
+    anims().forEach(a => { a.pause(); a.currentTime = ms; });
+    bar.style.width = (ms / DURATION * 100) + '%';
+  };
+
+  let start = 0;
+  function play() {
+    anims().forEach(a => { a.currentTime = 0; a.play(); });
+    start = performance.now();
+  }
+  function tick(now) {
+    const t = Math.min(now - start, DURATION);
+    bar.style.width = (t / DURATION * 100) + '%';
+    requestAnimationFrame(tick);
+  }
+  document.getElementById('replay').addEventListener('click', play);
+
+  if (render) {
+    anims().forEach(a => a.pause());
+  } else {
+    document.fonts.ready.then(() => { play(); requestAnimationFrame(tick); });
+  }
+})();
+</script>
+</body>
+</html>
