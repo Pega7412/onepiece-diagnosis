@@ -113,6 +113,24 @@
   }
   function closeModal() { $('#modal').hidden = true; }
 
+  // prompt()/confirm() は埋め込み表示や一部のスマホで使えないため、画面内のダイアログで代用する
+  let askCb = null;
+  function askText(title, value, max, cb) {
+    askCb = cb;
+    showModal('<h3>' + title + '</h3><input id="askInput" class="input" maxlength="' + max + '" value="' + esc(value) + '">' +
+      '<div class="actions"><button class="btn gray" data-act="close">キャンセル</button>' +
+      '<button class="btn pink" data-act="askOk">決定</button></div>');
+    const input = $('#askInput');
+    input.focus();
+    input.select();
+  }
+  function askConfirm(message, cb) {
+    askCb = cb;
+    showModal('<h3>確認</h3><div class="muted">' + esc(message) + '</div>' +
+      '<div class="actions"><button class="btn gray" data-act="close">キャンセル</button>' +
+      '<button class="btn pink" data-act="askOk">OK</button></div>');
+  }
+
   function updateTop() {
     refreshMp();
     $('#statStars').textContent = fmt(S.stars);
@@ -591,25 +609,32 @@
     auto: toggleAuto,
     settle,
     settleOk,
+    askOk() {
+      const cb = askCb;
+      const input = $('#askInput');
+      askCb = null;
+      closeModal();
+      if (cb) cb(input ? input.value : undefined);
+    },
     editName() {
-      const v = prompt('名前（12文字まで）', S.name);
-      if (v && v.trim()) { S.name = v.trim().slice(0, 12); save(); go('mypage'); }
+      askText('名前（12文字まで）', S.name, 12, (v) => {
+        if (v && v.trim()) { S.name = v.trim().slice(0, 12); save(); go('mypage'); }
+      });
     },
     editBio() {
-      const v = prompt('ひとこと（60文字まで）', S.bio);
-      if (v !== null) { S.bio = v.slice(0, 60); save(); go('mypage'); }
+      askText('ひとこと（60文字まで）', S.bio, 60, (v) => { S.bio = v.slice(0, 60); save(); go('mypage'); });
     },
     pickIcon: pickIconModal,
     pickTitle: pickTitleModal,
     setIcon(el) { S.icon = el.dataset.id; save(); closeModal(); go('mypage'); },
     setTitle(el) { S.title = el.dataset.id || null; save(); closeModal(); go('mypage'); },
     reset() {
-      if (confirm('セーブデータをすべて消して最初からやり直しますか？')) {
+      askConfirm('セーブデータをすべて消して最初からやり直しますか？', () => {
         try { localStorage.removeItem(KEY); } catch (e) { /* noop */ }
         S = defaults();
         rollDay();
         go('home');
-      }
+      });
     },
     useItem(el) { useItem(el.dataset.id); },
     pull(el) { pull(Number(el.dataset.n), el.dataset.pay); },
@@ -650,7 +675,6 @@
       return;
     }
     if (el.dataset.nav) {
-      if (game && !confirm('遊技を中断しますか？（精算されません）')) return;
       go(el.dataset.nav);
     } else if (el.dataset.go) {
       go(el.dataset.go);
