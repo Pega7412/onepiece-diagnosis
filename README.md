@@ -65,3 +65,12 @@ PCのブラウザで `http://localhost:4173` を開いてください。終了�
 4. 携帯のSafariまたはChromeで `http://192.168.1.20:4173` を開きます（IPアドレス部分は自分のPCの値に置き換えます）。
 
 開けない場合は、Windowsファイアウォールの確認画面でPythonの「プライベート ネットワーク」へのアクセスを許可してください。公共Wi-Fiや一部のルーターでは端末同士の通信が禁止されているため、その場合は自宅Wi-Fiなどで試してください。
+
+## REA（Reverse Engineer Anything）
+
+Claude Code から [REA](https://github.com/morluto/rea) を使えるようにしています（このリポジトリ専用の設定です）。
+
+- `.mcp.json` … REA の MCP サーバー（`rea-agents@6.5.0` に固定）
+- `.claude/skills/reverse-engineer-anything` … REA の公式ワークフロー skill
+
+使い方: Node.js 22.19 以上が必要です。Claude Code をこのリポジトリで開き、プロジェクトの MCP サーバー `rea` を承認してください。ネイティブバイナリの解析には Hopper / Ghidra / IDA が別途必要です（JavaScript / Electron の静的解析は不要）。解析対象のソフトウェアのライセンスと法令を確認した上で利用してください。
